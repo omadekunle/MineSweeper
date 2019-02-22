@@ -26,13 +26,12 @@ window.title("MineSweeper")
 
 def checker(btn, row, col):
     global start
-    print(str(row) + " " + str(col))
+    # print(str(row) + " " + str(col))
     if (btn["text"] == "" and not start):
-        disableButton(row, col)
-        start = True
         fillFrame(row, col)
         breakGround(row, col)
-        showAllZeros()
+        start = True
+        # showAllZeros()
     elif (start and isInt(charCount[row][col])):
         buttons[row][col]["text"] = charCount[row][col]
     elif (charCount[row][col] == "B"):
@@ -88,16 +87,27 @@ def fillFrame(row, col):
             if (charCount[r][c] != "B"):
                 if (r > 0 and r < length - 1) and (c > 0 and c < width - 1):
                     count = aroundBox(r - 1, r + 2, c - 1, c + 2, r, c)
+
                 elif r == 0 and c == 0:
                     count = aroundBox(r, r + 2, c, c + 2, r, c)
+                elif r == 0 and (c > 0 and c < width - 1):
+                    count = aroundBox(r, r + 2, c - 1, c + 2, r, c)
                 elif r == 0 and c == width - 1:
                     count = aroundBox(r, r + 2, c - 1, c + 1, r, c)
+
                 elif r == length - 1 and c == 0:
                     count = aroundBox(r - 1, r + 1, c, c + 2, r, c)
                 elif r == length - 1 and c == width - 1:
                     count = aroundBox(r - 1, r + 1, c - 1, c + 1, r, c)
+                elif r == length - 1 and (c > 0 and c < width - 1):
+                    count = aroundBox(r-1, r + 1, c - 1, c + 2, r, c)
 
-                charCount[r][c] = str(count)
+                elif c == 0 and (r > 0 and r < length - 1):
+                    count = aroundBox(r - 1, r + 2, c, c + 2, r, c)
+                elif c == width - 1 and (r > 0 and r < length - 1):
+                    count = aroundBox(r - 1, r + 2, c - 1, c + 1, r, c)
+
+                charCount[r][c] = count
     charCount[row][col] = "S"
     print(charCount)
 
@@ -111,9 +121,44 @@ def isInt(s):
 
 
 def breakGround(row, col):
-    disableButton(row, col)
+    while (row >= 0):
+        while (col >= 0):
+            stop = checkBox(row, col)
+            if (charCount[row][col] == "B"):
+                pass
+            elif (stop):
+                disableButton(row, col)
+                break
+            col -= 1
+        while (col < width):
+            stop = checkBox(row, col)
+            if (charCount[row][col] == "B"):
+                pass
+            elif (stop):
+                disableButton(row, col)
+                break
+            col += 1
+        row -= 1
+    while (row < length):
+        while (col >= 0):
+            stop = checkBox(row, col)
+            if (charCount[row][col] == "B"):
+                pass
+            elif (stop):
+                disableButton(row, col)
+                break
+            col -= 1
+        while (col < width):
+            stop = checkBox(row, col)
+            if (charCount[row][col] == "B"):
+                pass
+            elif (stop):
+                disableButton(row, col)
+                break
+            col += 1
+        row += 1
 
-    try:
+    '''try:
         if (row < 0 or row >= length or col < 0 or col >= width):
             return
         if (charCount[row][col] == "B"):
@@ -137,15 +182,28 @@ def breakGround(row, col):
     breakGround(row, colSmall)
 
     breakGround(rowBig, colBig)
-    breakGround(rowSmall, colSmall)
+    breakGround(rowSmall, colSmall)'''
 
 
-def showAllZeros():
+def checkBox(row, col):
+    if (charCount[row][col] == "S"):
+        return True
+    elif (isInt(charCount[row][col]) and charCount[row][col] != '0'):
+        buttons[row][col]["text"] = charCount[row][col]
+        return True
+    elif (charCount[row][col] == 0):
+        return True
+    else:
+        return False
+
+
+'''def showAllZeros():
     for r in range(length):
         for c in range(width):
             if(charCount[r][c] == "0"):
                 print(charCount[r][c])
-                disableButton(r, c)
+                disableButton(r, c)'''
+
 
 def aroundBox(rowStart, rowEnd, colStart, colEnd, r, c):
     count = 0
