@@ -78,7 +78,9 @@ def fillFrame(row, col):
     '''
 
     for g in range(int((length + width) / 2)):
-        charCount[random.randint(0, length - 1)][random.randint(0, width - 1)] = "B"
+        randX = random.randint(0, width - 1)
+        randY = random.randint(0, length - 1)
+        charCount[randY][randX] = "B"
         # print(charCount)
 
     for r in range(length):
@@ -191,7 +193,7 @@ def checkBox(row, col):
     elif (isInt(charCount[row][col]) and charCount[row][col] != '0'):
         buttons[row][col]["text"] = charCount[row][col]
         return True
-    elif (charCount[row][col] == 0):
+    elif (charCount[row][col] == '0'):
         return True
     else:
         return False
